@@ -16,9 +16,17 @@ def post
     puts response.body
 end
 
-check = post
-puts check
+parsed = JSON.parse(post)
 
-parsed = JSON.parse(check)
+timedOut =  parsed.fetch("requestList")[0]["request"]["inclusionFilters"][1]["fieldName"]
+hasError =  parsed.fetch("requestList")[0]["request"]["inclusionFilters"][1]["fieldName"]
 
-p parsed.fetch("requestList")[0]["request"]["inclusionFilters"][1]["fieldName"]
+if timedOut.to_s == 'false'
+  puts 'Check Passed'
+  exit 0
+elsif hasError.to_s == 'false'
+  puts 'Check Passed'
+  exit 0
+else
+  puts 'Check Failed'
+  exit 1
