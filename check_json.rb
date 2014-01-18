@@ -21,12 +21,9 @@ parsed = JSON.parse(post)
 timedOut =  parsed.fetch("requestList")[0]["request"]["inclusionFilters"][1]["fieldName"]
 hasError =  parsed.fetch("requestList")[0]["request"]["inclusionFilters"][1]["fieldName"]
 
-if timedOut.to_s == 'false'
-  puts 'Check Passed'
-  exit 0
-elsif hasError.to_s == 'false'
-  puts 'Check Passed'
-  exit 0
+if timedOut.to_s == 'false' && hasError.to_s == 'false'
+  return 'Check Passed'
 else
-  puts 'Check Failed'
-  exit 1
+  return 'Check Failed'
+end
+
