@@ -6,8 +6,12 @@ require 'json'
 @host = '10.40.14.41'
 @port = '8088'
 @post = '/camstar-falcon-analysis/rest/search/event'
-@payload = File.read('dellrequest.txt') 
-
+@payload = File.read('dellrequest.txt')
+# Nagios Exit codes
+STATE_OK = '0'
+STATE_WARNING = '1'
+STATE_CRITICAL = '2'
+STATE_UNKNOWN = '3'
 
 def post
   req = Net::HTTP::Post.new(@post, initheader = {'Content-Type' =>'application/json'})
@@ -22,8 +26,8 @@ timedOut =  parsed.fetch("requestList")[0]["request"]["inclusionFilters"][1]["fi
 hasError =  parsed.fetch("requestList")[0]["request"]["inclusionFilters"][1]["fieldName"]
 
 if timedOut.to_s == 'false' && hasError.to_s == 'false'
-  return 'Check Passed'
+  return STATE_OK
 else
-  return 'Check Failed'
+  return STATE_CRITICAL
 end
 
