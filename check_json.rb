@@ -8,13 +8,21 @@ require 'json'
 @host = ARGV[0] 
 @port = ARGV[1]
 @post = '/camstar-falcon-analysis/rest/search/event'
-@payload = File.read('dellrequest.txt') 
+
+if ARGV[2] == 'dell'
+   @payload = File.read('dellrequest.txt')
+elsif ARGV[2] == 'camstar' 
+   @payload = File.read('camstarrequest.txt')
+else
+  puts "specify which tenant"
+  exit 3
+end
+
 # Nagios Exit codes
 STATE_OK = '0'
 STATE_WARNING = '1'
 STATE_CRITICAL = '2'
 STATE_UNKNOWN = '3'
-
 
 def post
   req = Net::HTTP::Post.new(@post, initheader = {'Content-Type' =>'application/json'})
@@ -28,14 +36,13 @@ parsed = JSON.parse(post)
 timedOut = parsed.fetch("timedOut")
 hasError = parsed.fetch("hasError")
 
-
 if timedOut.to_s == 'true'
   puts 'timedOut is true'
-  exit STATE_CRITICAL
+  exit 2
 elsif hasError.to_s == 'true'
   puts 'hasError is true'
-  exit STATE_WARNING
+  exit 1 
 else
   puts 'Check Passed'
-  exit STATE_OK
+  exit 0
 end
